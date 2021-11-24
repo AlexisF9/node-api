@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const ObjectID = require('mongoose').Types.ObjectId; // pour le put
+
+// pour trouver l'id (ex: put et delete)
+const ObjectID = require('mongoose').Types.ObjectId; 
 
 const {PostsModel} = require('../models/postsModel');
 
@@ -33,15 +35,17 @@ router.post('/', (req, res) => {
 
 // Modifier des données
 router.put('/:id', (req, res) => {
-    if (!ObjectID.isValid(req.params.id)) { // si id n'est pas connu
+
+    // si id n'est pas connu
+    if (!ObjectID.isValid(req.params.id)) { 
         return res.status(400).send("ID unknown : " + req.params.id)
     }
 
+    //sinon on update
     const udpateRecord = {
         author: req.body.author,
         message: req.body.message
     };
-
     PostsModel.findByIdAndUpdate(
         req.params.id,
         {$set: udpateRecord},
@@ -58,10 +62,13 @@ router.put('/:id', (req, res) => {
 
 // Supprimer des données
 router.delete('/:id', (req, res) => {
-    if (!ObjectID.isValid(req.params.id)) { // si id n'est pas connu
+
+    // si id n'est pas connu
+    if (!ObjectID.isValid(req.params.id)) { 
         return res.status(400).send("ID unknown : " + req.params.id)
     }
 
+    // sinon on delete
     PostsModel.findByIdAndRemove(
         req.params.id,
         (err, data) => {
